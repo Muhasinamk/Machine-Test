@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>flowerstore</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
+    <style>
+        body {
+            background: white;
+            font-family: 'Poppins', sans-serif;
+            height: 100%;
+            margin: 0;
+        }
+        .container-fluid {
+            min-height: 100%;
+            position: relative;
+            padding: 100px;
+            padding-top: 50px;
+            align: center;
+        }
+        .navbar {
+            padding: 20px;
+            background: #248EFE;
+            font-weight: bold;
+    font-size:large;
+        }
+        .navbar-brand {
+            font-weight: bold;
+            font-size: 1.5rem;
+            color: #f2f2f2;
+            text-decoration: none;
+        }
+        .navbar-brand:hover {
+            background-color: transparent;
+            color: #f2f2f2;
+        }
+        .header-link {
+            margin: 0 10px;
+            padding: 5px;
+            border: 0px;
+            border-radius: 5px;
+            text-decoration: none;
+            color: #f2f2f2;
+            font-size: 12px;
+            transition: background-color 0.3s ease;
+        }
+        .header-link:hover {
+            background-color: #f2f2f2;
+            color: #000;
+            text-decoration: None;
+        }
+        .list-group-item {
+            border: none;
+            margin-bottom: 10px;
+            padding: 10px;
+            border-radius: 5px;
+            transform: translateY(-5px);
+            box-shadow: 0 0 5px rgba(0,0,0,0.3);
+        }
+        .card-img {
+            max-width: 100%;
+            height: auto;
+        }
+        .list-group-item-info {
+            color: tomato;
+            font-weight: bold;
+            font-size: 14px;
+            text-align: right;
+            border: none;
+        }
+        p {
+            margin: 0;
+            padding: 0;
+        }
+        .site-footer {
+            background-color: #f8f8f8;
+            padding: 20px 0;
+            text-align: center;
+            bottom: 0;
+            width: 100%;
+            position:fixed;
+        }
+        .site-footer p {
+            margin: 0;
+            font-size: 14px;
+            color: #666;
+        }
+        @media (max-width: 767px) {
+            .site-footer {
+                position: fixed;
+                bottom: 0;
+                width: 100%;
+            }
+        }
+
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+
+        <div class="ml-auto">
+            <a class="header-link" href="{% url 'flowers' %}">Go Back</a>
+        </div>
+    </nav>
+    <div class="container-fluid">
+        {% if cart_items %}
+        <div class="title" style="text-align: center; justify-content: center; margin-bottom: 20px; display: flex;">
+            <h2 style="margin-right: 20px;">MY CART</h2><img src="https://www.freeiconspng.com/thumbs/shopping-cart-icon/red-simple-shopping-cart-icon-12.png" height="50px" width="50px">
+        </div>
+        <ul class="list-group">
+            {% for cart_item in cart_items %}
+            <li class="list-group-item">
+                <div class="row">
+                    <div class="col-sm-1">
+                        <img src="{{ cart_item.flower.image_url }}" class="card-img" alt="{{ cart_item.flower.title }}">
+                    </div>
+                    <div class="col-sm-10">
+                        <h5>{{ cart_item.flower.title }}</h5>
+                        <p style="font-size: 14px;"><strong>Price:</strong> &#8377 {{ cart_item.flower.price }} per Flower</p>
+                        <p style="font-size: 14px;"><strong>Quantity:</strong> {{ cart_item.quantity }}</p>
+                        <p style="font-size: 14px;"><strong>Total:</strong> &#8377 {{ cart_item.total_price }}</p>
+                    </div>
+                    <div class="col-sm-1 col-sm-1 d-flex align-items-center justify-content-center">
+                        <a class="btn btn-outline-danger" style="font-size: 16px; margin-right: 20px;" href="{% url 'remove_from_cart' flower_id=cart_item.flower.id %}" onclick="alert('Item removed from cart')"><i class="bi bi-trash3-fill"></i></a>
+                    </div>
+                </div>
+            </li>
+            {% endfor %}
+            <li class="list-group-item list-group-item-info">
+                <p>Total: &#8377 {{ cart_items.0.cart.total_price }}
+                <a class="btn btn-outline-primary" style="font-size: 12px; font-weight: bold; margin-left: 20px; margin-right: 15px;" href="" onclick="alert('Payment Successful')">Buy</a>
+                </p>
+            </li>
+        </ul>
+        {% else %}
+        <div style="text-align: center;">
+            <img src="https://www.seekpng.com/png/detail/117-1170538_404-your-cart-is-empty.png" width="400" height="400" class="img-fluid img-mobile-size">
+           <br><br>
+
+            <a href="{% url 'flowers' %}" style="font-size: 12px;" class="btn btn-outline-danger">Continue shopping</a>
+        </div>
+        {% endif %}
+    </div>
+    <footer class="site-footer">
+        <div class="container">
+            <p>© Copyright Flowerstore.All Rights Reserved</p>
+        </div>
+    </footer>
+</body>
+</html>
